@@ -1,0 +1,7 @@
+<IfModule mod_rewrite.c>
+
+  RewriteEngine On
+
+  RewriteRule \.(?:jpe?g|png)$ responsive-images.php [L]
+
+</IfModule>
