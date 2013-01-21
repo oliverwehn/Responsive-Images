@@ -2,6 +2,6 @@
 
   RewriteEngine On
 
-  RewriteRule \.(?:jpe?g|png)$ responsive-images.php [L]
+  RewriteRule \.(?:jpe?g|png)$ responsive-images.php [QSA,L]
 
 </IfModule>
