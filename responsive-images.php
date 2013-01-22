@@ -66,10 +66,11 @@ if(count($_GET) == 0 && $_COOKIE['responsive']) {
 	if(file_exists(PATH_ROOT . $path)) {
 		// determine target width
 		$max_width = RES_DEFAULT;
+		$pxratio = isset($_GET['pxratio'])?$_GET['pxratio']:1;
 		if((array_key_exists('pwidth', $_GET)) && ($_GET['pwidth'] > 0)) {
-			$max_width = ceil($_GET['pwidth'] / RES_INTERVALS) * RES_INTERVALS;
+			$max_width = ceil(ceil($_GET['pwidth'] / RES_INTERVALS) * RES_INTERVALS * $pxratio);
 		} elseif((array_key_exists('swidth', $_GET)) && ($_GET['swidth'] > 0)) {
-			$max_width = ceil($_GET['swidth'] / RES_INTERVALS) * RES_INTERVALS;
+			$max_width = ceil(ceil($_GET['swidth'] / RES_INTERVALS) * RES_INTERVALS * $pxratio);
 		}
 		$error = deliverImage($path, $max_width)?3:0;	
 	} else {

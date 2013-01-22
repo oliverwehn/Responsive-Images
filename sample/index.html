@@ -1,12 +1,25 @@
+<!DOCTYPE html>
 <html>
-
 	<head>
+    	<meta name="viewport" content="width=device-width">
 		<title>Test</title>
+		<script>
+			document.cookie='responsive=1';
+		</script>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+		<script src="../js/jquery.responsive-images.js"></script>
+
 	</head>
-
 	<body>
-		<img src="images/image.jpg" alt="Image" />
+		<img src="images/image.jpg" alt="Image" style="max-width: 100%" />
+		<p style="width: 300px;">
+			<img src="images/image2.jpg" alt="Image" />
+		</p>
 
-		<img src="images/image2.jpg" alt="Image" />
+		<script>
+		$(window).load(function() {
+			$('img').responsiveImages({ respondToResize: true });
+		});
+		</script>
 	</body>
 </html>
