@@ -26,6 +26,8 @@ The jQuery Plugin just iterates through all images you want to be matched, store
 
 By default the plugin triggers a bigger image only being loaded on window resize if the current image would have to be upscaled.
 
+I thought about providing a framework-agnostic pure javascript solution. But as I’m not that deep into JS, I decided to go with jQuery to get results in no time. If you are interested in turning the plugin into a standalone version, I’d be happy to get your pull request.
+
 
 So what exactly happens?
 ------------------------
