@@ -1,7 +1,9 @@
 Responsive Images
 =================
 
-This approach to deliver content as well as resolution specific combines some ideas from other strategies like Matt Wilcox’ Adaptive Images and others.
+BE WARNED: THIS IS AN ONGOING EXPERIMENT AND HASN’T BEEN REALLY TESTED, YET!
+
+This approach to deliver content as well as resolution specific combines some ideas from other strategies like Matt Wilcox’ Adaptive Images and others. If you got some suggestions or feedback, let me know!
 
 It combines a cookie, a php script and a jQuery plugin to serve the images the optimal size. What do we need all the stuff for?
 
