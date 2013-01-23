@@ -3,7 +3,7 @@ Responsive Images
 
 BE WARNED: THIS IS AN ONGOING EXPERIMENT AND HASN’T BEEN REALLY TESTED, YET! 
 
-This approach to deliver content as well as resolution specific images combines some ideas from other strategies like Matt Wilcox’ Adaptive Images and others. Why I started this? Because I was never happy about scaling images just down to screen size, because the most images are much smaller than that. So I tried to develop a strategy to match the image resolution to the layout context it’s presented in – without hacking document structure with comments and document.write. If you got some suggestions or feedback, let me know! I’m currently testing this on my (German) blog, if you want to see the whole thin in action.
+This approach to deliver content as well as resolution specific images combines some ideas from other strategies like Matt Wilcox’ Adaptive Images and others. Why I started this? Because I was never happy about scaling images just down to screen size, because the most images are much smaller than that. So I tried to develop a strategy to match the image resolution to the layout context it’s presented in – without hacking document structure with comments and document.write. If you got some suggestions or feedback, let me know! I’m currently testing this on my (German) blog (http://marginalia.oliverwehn.com/) , if you want to see the whole thin in action.
 
 It combines a cookie, a php script and a jQuery plugin to serve the images the optimal size. What do we need all the stuff for?
 
