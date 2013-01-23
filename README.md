@@ -3,7 +3,7 @@ Responsive Images
 
 BE WARNED: THIS IS AN ONGOING EXPERIMENT AND HASN’T BEEN REALLY TESTED, YET!
 
-This approach to deliver content as well as resolution specific images combines some ideas from other strategies like Matt Wilcox’ Adaptive Images and others. If you got some suggestions or feedback, let me know!
+This approach to deliver content as well as resolution specific images combines some ideas from other strategies like Matt Wilcox’ Adaptive Images and others. Why I started this? Because I was never happy about scaling images just down to screen size, because the most images are much smaller than that. So I tried to develop a strategy to match the image resolution to the layout context it’s presented in – without hacking document structure with comments and document.write. If you got some suggestions or feedback, let me know!
 
 It combines a cookie, a php script and a jQuery plugin to serve the images the optimal size. What do we need all the stuff for?
 
@@ -58,3 +58,9 @@ Put responsive-images.php into place, as well as the plugin jquery.responsive-im
 Create a new directory where your images will be cached. Change the settings in responsive-images.php to match your setup and need.
 
 Test it, give feedback, contribute.
+
+
+The Future
+----------
+
+Testing will continue while I’ll be working on making the whole thing more flexible and offering more config options. Also I want to include SVG handling, so if there is SVG support, the php script will deliver the SVG image, otherwise it will send a appropriately scaled fallback image.
