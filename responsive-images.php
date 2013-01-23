@@ -110,7 +110,8 @@ function getImage($src_path, $dst_width) {
 		}
 	}
 	$cache_path = $cache_dir . '/' . preg_replace("#\.([a-z]+)$#i", "." . $dst_width . ".$1", basename($src_path));
-	$src_path = substr(PATH_ROOT, 0, -1) . $src_path;
+	$root_path = PATH_ROOT;
+	$src_path = ($root_path[strlen($root_path)-1] == '/'?substr($root_path, 0, -1):$root_path) . $src_path;
 
 	if(!file_exists($cache_path)) {
 		// Check the image dimensions

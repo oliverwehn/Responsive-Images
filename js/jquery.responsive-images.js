@@ -47,6 +47,9 @@
 		$(this.elements).filter('img').each(function(i, img) {
 			var $img = $(img);
 			var pwidth = $img.parent().width();
+			if(pwidth < $img.width()) {
+				pwidth = $img.width();
+			}
 			var src = '';
 			if(!(src = $img.attr('data-src'))) {
 				$img.attr('data-src', $img.attr('src'));
