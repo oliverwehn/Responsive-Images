@@ -28,11 +28,6 @@ define('URL_PLACEHOLDER', dirname($_SERVER['SCRIPT_NAME']) . '/sample/images/loa
  * the smaller the number, the more versions of each image are likely to be generated and cached
  * in number of pixels
  */
-define('RES_INTERVALS', 100); // number of pixels
-/**
- * max width of images to be served as fallback
- * in number of pixels
- */
 define('RES_DEFAULT', 800); 
 /**
  * JPEG quality
@@ -61,16 +56,16 @@ if(count($_GET) == 0 && $_COOKIE['responsive']) {
 	die();
 } else {
 	// gather path information
-	$url = parse_url(urldecode($_SERVER['REQUEST_URI']), PHP_URL_PATH);
+	$url = preg_replace("#\.([a-z0-9]{6,10})\.([a-z]+)$#i", ".$2", parse_url(urldecode($_SERVER['REQUEST_URI']), PHP_URL_PATH));
 	$path = dirname($url) . '/' . basename($url);
 	if(file_exists(PATH_ROOT . $path)) {
 		// determine target width
 		$max_width = RES_DEFAULT;
 		$pxratio = isset($_GET['pxratio'])?$_GET['pxratio']:1;
 		if((array_key_exists('pwidth', $_GET)) && ($_GET['pwidth'] > 0)) {
-			$max_width = ceil(ceil($_GET['pwidth'] / RES_INTERVALS) * RES_INTERVALS * $pxratio);
+			$max_width = ceil($_GET['pwidth'] * $pxratio);
 		} elseif((array_key_exists('swidth', $_GET)) && ($_GET['swidth'] > 0)) {
-			$max_width = ceil(ceil($_GET['swidth'] / RES_INTERVALS) * RES_INTERVALS * $pxratio);
+			$max_width = ceil($_GET['swidth'] * $pxratio);
 		}
 		$error = deliverImage($path, $max_width)?3:0;	
 	} else {

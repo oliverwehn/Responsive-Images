@@ -11,7 +11,8 @@
 		defaults = {
 			respondToResize: false,
 			respondToUpscaleOnly: true,
-			useParentWidth: true
+			useParentWidth: true,
+			resolutionInterval: 50 
 		};
 
 	$.responsiveImages = function( elements, options ) {
@@ -40,28 +41,31 @@
 		}
 	};
 
+	// Updates paths of all matched image elements
 	$.responsiveImages.prototype.updatePaths = function() {
-		var swidth = screen.width;
+		var instance = this;
+		var options = instance.options;
 		var pxratio = window.devicePixelRatio || 1;
-		var options = this.options;
-		$(this.elements).filter('img').each(function(i, img) {
+		var swidth = Math.ceil(screen.width / options.resolutionInterval) * options.resolutionInterval;
+		$(instance.elements).filter('img').each(function(i, img) {
 			var $img = $(img);
-			var pwidth = $img.parent().width();
-			if(pwidth < $img.width()) {
-				pwidth = $img.width();
+			var pwidth = Math.ceil($img.parent().width() / options.resolutionInterval) * options.resolutionInterval;
+			if(pwidth < $img.width() && $img.width() < $img[0].width) {
+				pwidth = Math.ceil($img.width() / options.resolutionInterval) * options.resolutionInterval;
 			}
 			var src = '';
-			if(!(src = $img.attr('data-src'))) {
-				$img.attr('data-src', $img.attr('src'));
-				src = $img.attr('data-src');
+			if(!(src = $img.data('src'))) {
+				$img.data('src', $img.attr('src'));
+				src = $img.data('src');
 			}
-			var src = $img.attr('data-src');
+			var src = $img.data('src');
 			var cwidth = $img.data('width') || null;
 			if(
 				cwidth == null ||
 				(pwidth > 0 && options.useParentWidth && pwidth > cwidth) ||
 				((pwidth == 0 || !options.useParentWidth) && swidth > cwidth)
 			) {
+				var hash = instance.getHash(swidth + '.' + pwidth + '.' + pxratio);
 				var pre_img = new Image();
 				$(pre_img)
 				.load(function() {
@@ -69,9 +73,23 @@
 					.attr('src', $(this).attr('src'))
 					.data('width', $(this)[0].width);
 				})
-				.attr('src', src + '?swidth=' + swidth + ((pwidth > 0 && options.useParentWidth)?'&pwidth=' + pwidth:'') + '&pxratio=' + pxratio);
+				.attr('src', src.replace(/(\.[a-z]+)$/, '.' + hash + '$1') + '?swidth=' + swidth + ((pwidth > 0 && options.useParentWidth)?'&pwidth=' + pwidth:'') + '&pxratio=' + pxratio);
 			}
 		});
+	};
+
+	// Generates hash string for url to make it unique for CDNs not caring about GET parameters
+	// based on http://werxltd.com/wp/2010/05/13/javascript-implementation-of-javas-string-hashcode-method/
+	$.responsiveImages.prototype.getHash = function(str) {
+	    var hash = 0, i, char;
+	    if (str.length == 0) return hash;
+	    for (i = 0; i < str.length; i++) {
+	        char = str.charCodeAt(i);
+	        hash = ((hash<<5)-hash)+char;
+	        hash = hash & hash;
+	    }
+	    hash = hash * -1;
+	    return hash.toString(16);
 	};
 
 	$.fn[pluginName] = function(options, callback) {
