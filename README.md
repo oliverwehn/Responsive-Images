@@ -22,7 +22,7 @@ All image requests are rewritten to the php script file. If the cookie isn’t s
 jQuery Plugin
 -------------
 
-The jQuery Plugin just iterates through all images you want to be matched, stores the original url in a data-src attribute. Then it tries to determine the width of the image’s parent element and adds the parameters swidth (screen width) and pwidth (width of parent element) as well as pxratio (pixel ratio) to the original url in the src attribute - of course not without preloading the image from the new url before. 
+The jQuery Plugin just iterates through all images you want to be matched, stores the original url in a data-src attribute. Then it tries to determine the width of the image’s parent element and adds the parameters swidth (screen width) and pwidth (width of parent element) as well as pxratio (pixel ratio) to the original url in the src attribute - of course not without preloading the image from the new url before.To deal with different caching behaviours when it comes to content distribution networks (CDN), a unique hash is generated and inserted into the url, so the resized image will be cached in its resized version, even if GET parameters were ignored. 
 
 By default the plugin triggers a bigger image only being loaded on window resize if the current image would have to be upscaled.
 
