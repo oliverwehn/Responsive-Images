@@ -88,7 +88,7 @@
 	        hash = ((hash<<5)-hash)+char;
 	        hash = hash & hash;
 	    }
-	    hash = hash * -1;
+	    if(hash < 0) hash = hash * -1;
 	    return hash.toString(16);
 	};
 
