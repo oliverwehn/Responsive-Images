@@ -50,7 +50,7 @@
 		$(instance.elements).filter('img').each(function(i, img) {
 			var $img = $(img);
 			var pwidth = Math.ceil($img.parent().width() / options.resolutionInterval) * options.resolutionInterval;
-			if(pwidth < $img.width() && $img.width() < $img[0].width) {
+			if(pwidth < $img.width()) {
 				pwidth = Math.ceil($img.width() / options.resolutionInterval) * options.resolutionInterval;
 			}
 			var src = '';
