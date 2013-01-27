@@ -1,7 +1,7 @@
 /*! Copyright (c) 2013 Oliver Wehn (http://www.oliverwehn.com)
  * Licensed under MIT, GPL
  *
- * Version: 0.1.0
+ * Version: 0.2.0
  * 
  * Requires jQuery framework
  */
@@ -30,7 +30,7 @@
 		if(this.options.respondToResize) {
 			var to = null;
 			var instance = this;
-			$(window).resize(function() {
+			$(window).on('resize orientationchange', function() {
 				if(to != null) {
 					window.clearTimeout(to);
 				}
@@ -46,7 +46,12 @@
 		var instance = this;
 		var options = instance.options;
 		var pxratio = window.devicePixelRatio || 1;
-		var swidth = Math.ceil(screen.width / options.resolutionInterval) * options.resolutionInterval;
+		if(typeof window.orientation != undefined) {
+        	swidth = Math.ceil(((window.orientation==90 || window.orientation==-90) ? screen.height : screen.width) / options.resolutionInterval) * options.resolutionInterval;
+        } else {
+			swidth = Math.ceil(screen.width / options.resolutionInterval) * options.resolutionInterval;
+		}
+
 		$(instance.elements).filter('img').each(function(i, img) {
 			var $img = $(img);
 			var pwidth = Math.ceil($img.parent().width() / options.resolutionInterval) * options.resolutionInterval;
@@ -55,23 +60,34 @@
 			}
 			var src = '';
 			if(!(src = $img.data('src'))) {
-				$img.data('src', $img.attr('src'));
-				src = $img.data('src');
+				src = $img.attr('src');
+				$img.data('src', src);
 			}
-			var src = $img.data('src');
 			var cwidth = $img.data('width') || null;
 			if(
 				cwidth == null ||
-				(pwidth > 0 && options.useParentWidth && pwidth > cwidth) ||
-				((pwidth == 0 || !options.useParentWidth) && swidth > cwidth)
-			) {
+				(
+					cwidth != null &&
+					(
+						(pwidth > 0 && options.useParentWidth && pwidth > cwidth) ||
+						((pwidth == 0 || !options.useParentWidth) && swidth > cwidth)
+					)
+				)
+			) { 
 				var hash = instance.getHash(swidth + '.' + pwidth + '.' + pxratio);
 				var pre_img = new Image();
 				$(pre_img)
 				.load(function() {
+					var width = 0;
+					if(typeof this.naturalWidth != undefined) {
+						width = this.naturalWidth;
+					} else {
+						width = this.width;
+					}
+					width = width / pxratio;
 					$img
 					.attr('src', $(this).attr('src'))
-					.data('width', $(this)[0].width);
+					.data('width', width);
 				})
 				.attr('src', src.replace(/(\.[a-z]+)$/, '.' + hash + '$1') + '?swidth=' + swidth + ((pwidth > 0 && options.useParentWidth)?'&pwidth=' + pwidth:'') + '&pxratio=' + pxratio);
 			}
