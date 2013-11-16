@@ -26,7 +26,7 @@ define('PATH_CACHE', dirname(__FILE__) . '/site/assets/cache/images_cache');
  * PATH_PLACEHOLDER: placeholder image to be delivered before replacement
  * url
  */
-define('URL_PLACEHOLDER', SITE_PATH . (strlen(SITE_PATH) == 1?'':'/') . '/site/templates/images/transparent.gif');
+define('URL_PLACEHOLDER', SITE_PATH . (strlen(SITE_PATH) == 1?'':'/') . '/sample/images/transparent.gif');
 /**
  * pixel interval to determine width of image to be served (width = ceil(imagewidth / interval) * inteval)
  * the smaller the number, the more versions of each image are likely to be generated and cached
@@ -60,8 +60,8 @@ define('DEBUG', false);
 $error = 0;
 $url = parse_url(urldecode(isset($_GET['url'])?$_GET['url']:$_SERVER['REQUEST_URI']), PHP_URL_PATH);
 if(!preg_match("#(\.s([0-9]+)\.p([0-9]+)\.r([0-9]+))\.([a-z]+)$#i", $url, $match) && $_COOKIE['responsive']) {
-	// redirect to placeholder
-	header('Location: ' . URL_PLACEHOLDER);
+	// deliver placeholder
+	sendImage(URL_PLACEHOLDER, BROWSER_CACHE);
 	exit();
 } else {
 	// gather path information
