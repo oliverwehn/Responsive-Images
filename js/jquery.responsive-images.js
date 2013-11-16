@@ -87,7 +87,7 @@
 				if($img.hasClass('mobile')) $img.removeClass('mobile');
 				if(!(src = $img.data('src'))) {
 					src = $img.attr('src');
-					$img.data('src', src);
+					$img.data('src', src).removeAttr('src');
 				}
 			}	
 			var cwidth = $img.data('width') || null;

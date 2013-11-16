@@ -1,5 +1,5 @@
-Responsive Images
-=================
+Responsive Images V.0.8
+=======================
 
 BE WARNED: THIS IS AN ONGOING EXPERIMENT AND HASN’T BEEN REALLY TESTED, YET! 
 
@@ -16,15 +16,21 @@ The cookie just stores the value “responsive=1” to be sent with all http req
 PHP Script
 ----------
 
-All image requests are rewritten to the php script file. If the cookie isn’t set, the php script delivers the requested image scaled to a predefinded max width if needed. But if the cookie is set, the php script redirects all image requests (using a “301 temporary moved” redirect) to a placeholder image (or e.g. an animated loading gif). As soon, as the request is made with the GET parameters (int) swidth for “screen width” or (int) pwidth for “parent width”, the script will act differently. In this case it will generate and cache a resized image accordingly to the given pixel widths while prefering the parent width. To keep the number of cached files low, the width value will be ceiled to match a multiple of a predefined pixel interval.
+All image requests are rewritten to the php script file. If the cookie isn’t set, the php script delivers the requested image scaled to a predefinded max width if needed. But if the cookie is set–and if the image requests weren’t prevented on client side–the php script delivers a placeholder image (or e.g. an animated loading gif). As soon, as the request is made with information on resolution and layout-specific image dimensions within the filename (int screen width and/or int parent width and int pixel ratio, the script will act differently. In this case it will generate and cache a resized image accordingly to the given pixel widths and pixel ratio. To keep the number of cached files low, the width value will be ceiled to match a multiple of a predefined pixel interval (like 50px, so 432px request will lead to 450px image width being delivered).
 
 
 jQuery Plugin
 -------------
 
-The jQuery Plugin just iterates through all images you want to be matched, stores the original url in a data-src attribute. Then it tries to determine the width of the image’s parent element and adds the parameters swidth (screen width) and pwidth (width of parent element) as well as pxratio (pixel ratio) to the original url in the src attribute - of course not without preloading the image from the new url before.To deal with different caching behaviours when it comes to content distribution networks (CDN), a unique hash is generated and inserted into the url, so the resized image will be cached in its resized version, even if GET parameters were ignored. 
+The jQuery Plugin just iterates through all images you want to be matched, stores the original source as data for each img element and removes the original src attribute. Then it tries to determine the width of the next image’s parent  block level element and adds the values for screen width and width of parent element as well as pixel ratio to the filename in the original url and sets it as new image source - of course not without preloading the image from the new url before. 
 
 By default the plugin triggers a bigger image only being loaded on window resize if the current image would have to be upscaled.
+
+Since v. 0.8. it’s possible to pass a callback function, which is triggered when all scaled images were loaded and sources were set successfully.
+It’s also possible to just encode an img url if an image has to be created dynamically on the fly, like:
+
+var $img = $('<img />');
+$img.attr('src', $img.responsiveImages('getURL', '/images/catpic.jpg', { swidth: screen.width, pwidth: $('.future-parent').width(), pxratio: window.devicePixelRatio || 1 }));
 
 I thought about providing a framework-agnostic pure javascript solution. But as I’m not that deep into JS, I decided to go with jQuery to get results in no time. If you are interested in turning the plugin into a standalone version, I’d be happy to get your pull request.
 
@@ -46,7 +52,10 @@ Put this into the head section of your page:
 	document.cookie='responsive=1';
 </script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-<script src="url/to/js/jquery.responsiveimages.min.js"></script>
+<script src="url/to/js/jquery.responsive-images.min.js"></script>
+<script>
+	$('.responsive-images').responsiveImages({ /* your options */ }, function() { /* your callback */ });
+</script>
 
 
 Add a rewrite to you .htaccess (Apache only), combined with some RewriteCond to make it fit your needs:
@@ -63,4 +72,4 @@ Test it, give feedback, contribute.
 The Future
 ----------
 
-Testing will continue while I’ll be working on making the whole thing more flexible and offering more config options. Also I want to include SVG handling, so if there is SVG support, the php script will deliver the SVG image, otherwise it will send a appropriately scaled fallback image.
+Testing will continue while I’ll be working on making the whole thing more flexible and offering more config options.
