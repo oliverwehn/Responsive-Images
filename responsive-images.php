@@ -21,7 +21,7 @@ define('SITE_PATH', dirname($_SERVER['SCRIPT_NAME']));
  * PATH_CACHE: directory where resized image versions are stored
  * file system path
  */
-define('PATH_CACHE', dirname(__FILE__) . '/site/assets/cache/images_cache');
+define('PATH_CACHE', dirname(__FILE__) . '/sample/images_cache');
 /**
  * PATH_PLACEHOLDER: placeholder image to be delivered before replacement
  * url
