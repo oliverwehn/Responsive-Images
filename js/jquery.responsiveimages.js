@@ -28,7 +28,7 @@
     this.options = $.extend({}, defaults, options);
     this.$images = $elements.find(this.options.imgSelector);
     if(this.$images.length == 0) {
-        this.$images = $elements.filter(this.options.imgSelector);
+        this.$images = $elements.filter(this.options.imgSelector);image
     }
     this._defaults = defaults;
     this._name = pluginName;

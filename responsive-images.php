@@ -1,19 +1,17 @@
 <?php
 /**
  * Responsive Images
- * V. 0.9
- * 05/27/2014
+ * V. 1.0.0
+ * 07/03/2014
  * by Oliver Wehn, www.oliverwehn.com
  * 
  * inspired by and partly based on Adaptive Images by Matt Wilcox, https://github.com/MattWilcox/Adaptive-Images
  *
  *
- *
  * Configure values below
- *
- *
- * SITE_PATH: Document Root
- * file system path
+ * 
+ * SITE_PATH: Document root file system path
+ * SITE_URI: URI from document root
  */
 define('SITE_PATH', rtrim(dirname($_SERVER['SCRIPT_FILENAME']),"/"));
 define('SITE_URI', dirname($_SERVER['SCRIPT_NAME']));
