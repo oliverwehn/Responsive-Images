@@ -1,8 +1,8 @@
 <?php
 /**
  * Responsive Images
- * V. 0.8
- * 11/16/2013
+ * V. 0.9
+ * 05/27/2014
  * by Oliver Wehn, www.oliverwehn.com
  * 
  * inspired by and partly based on Adaptive Images by Matt Wilcox, https://github.com/MattWilcox/Adaptive-Images
@@ -12,21 +12,21 @@
  * Configure values below
  *
  *
- * ROOT_PATH: Document Root
+ * SITE_PATH: Document Root
  * file system path
  */
-define('ROOT_PATH', ($_SERVER['DOCUMENT_ROOT'][strlen($_SERVER['DOCUMENT_ROOT'])-1] == '/')?substr($_SERVER['DOCUMENT_ROOT'], 0, -1):$_SERVER['DOCUMENT_ROOT']);
-define('SITE_PATH', dirname($_SERVER['SCRIPT_NAME']));
+define('SITE_PATH', rtrim(dirname($_SERVER['SCRIPT_FILENAME']),"/"));
+define('SITE_URI', dirname($_SERVER['SCRIPT_NAME']));
 /**
  * PATH_CACHE: directory where resized image versions are stored
  * file system path
  */
-define('PATH_CACHE', dirname(__FILE__) . '/sample/images_cache');
+define('PATH_CACHE', dirname(__FILE__) . '/site/assets/cache/images_cache');
 /**
  * PATH_PLACEHOLDER: placeholder image to be delivered before replacement
  * url
  */
-define('URL_PLACEHOLDER', SITE_PATH . (strlen(SITE_PATH) == 1?'':'/') . '/sample/images/transparent.gif');
+define('URL_PLACEHOLDER', SITE_URI . (strlen(SITE_URI) == 1?'':'/') . 'site/templates/assets/images/transparent.gif');
 /**
  * pixel interval to determine width of image to be served (width = ceil(imagewidth / interval) * inteval)
  * the smaller the number, the more versions of each image are likely to be generated and cached
@@ -37,7 +37,8 @@ define('RES_DEFAULT', 800);
  * JPEG quality
  * int value
  */
-define('RES_JPEG_QUALITY', 50);
+define('RES_JPEG_QUALITY', 100);
+define('PROCESS_SHARPEN', true);
 /**
  * How long should the browser store the cached image
  * int value
@@ -49,7 +50,7 @@ define('BROWSER_CACHE', 60*60*24*7);
 ini_set('memory_limit', '120M');
 error_reporting('E_ALL');
 /**
- * Log image generation for debug
+ * Log image generation for debugging
  */
 define('DEBUG', false);
 
@@ -60,7 +61,7 @@ define('DEBUG', false);
 $error = 0;
 $url = parse_url(urldecode(isset($_GET['url'])?$_GET['url']:$_SERVER['REQUEST_URI']), PHP_URL_PATH);
 if(!preg_match("#(\.s([0-9]+)\.p([0-9]+)\.r([0-9]+))\.([a-z]+)$#i", $url, $match) && $_COOKIE['responsive']) {
-	// deliver placeholder
+	// redirect to placeholder
 	sendImage(URL_PLACEHOLDER, BROWSER_CACHE);
 	exit();
 } else {
@@ -69,12 +70,7 @@ if(!preg_match("#(\.s([0-9]+)\.p([0-9]+)\.r([0-9]+))\.([a-z]+)$#i", $url, $match
 	$pwidth = $match[3];
 	$pxratio = $match[4];
 	$url = str_replace($match[1], '', $url);
-	$path = (substr($path, 0, -1) == '/'?substr(dirname($url), 1):dirname($url));
-	if(strpos($path, SITE_PATH) === false) {
-        $path = SITE_PATH . $path;
-	} 
-	$path = ROOT_PATH . $path; 
-	$path .= '/' . basename($url);
+	$path = getPath($url);
 	if(file_exists($path)) {
 		// determine target width
 		$max_width = RES_DEFAULT;
@@ -113,6 +109,15 @@ function deliverImage($path, $width) {
 	if($filename = getImage($path, $width)) {
 		sendImage($filename, BROWSER_CACHE);
 	}
+}
+
+function getPath($url) {
+	$path = ltrim(dirname($url));
+	if(strpos($path, SITE_URI) === false) {
+    $path = SITE_URI . $path;
+	}
+	$path = preg_replace('#' . preg_quote(SITE_URI) . '$#', '', SITE_PATH) . $path . '/' . basename($url);
+	return $path;
 }
 
 function getImage($src_path, $dst_width) {
@@ -169,19 +174,20 @@ function getImage($src_path, $dst_width) {
 			$transparent = imagecolorallocatealpha($dst_image, 255, 255, 255, 127);
 			imagefilledrectangle($dst_image, 0, 0, $dst_width, $dst_height, $transparent);
 		}
-	  	
+		
 		imagecopyresampled($dst_image, $src_image, 0, 0, 0, 0, $dst_width, $dst_height, $src_width, $src_height); // do the resize in memory
 		imagedestroy($src_image);
 
-
 		if(PROCESS_SHARPEN == TRUE && function_exists('imageconvolution')) {
-			$int_sharpness = findSharp($width, $dst_width);
+			
+			$int_sharpness = findSharp($src_width, $dst_width);
 			$arr_matrix = array(
-			  array(-1, -2, -1),
-			  array(-2, $int_sharpness + 12, -2),
-			  array(-1, -2, -1)
+			  array(-1, -1, -1),
+			  array(-1, $int_sharpness + 7, -1),
+			  array(-1, -1, -1)
 			);
-			imageconvolution($dst_image, $arr_matrix, $int_sharpness, 0);
+
+			imageconvolution($src_image, $arr_matrix, $int_sharpness, 0);
 		}
 
 		// save cache file
@@ -231,7 +237,7 @@ function findSharp($intOrig, $intFinal) {
 function sendImage($filename, $browser_cache) {
 	$extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 	if (in_array($extension, array('png', 'gif', 'jpeg'))) {
-		header("Content-Type: image/".$extension);
+		header("Content-Type: image/".$extension); 
 	} else {
 		header("Content-Type: image/jpeg");
 	}
