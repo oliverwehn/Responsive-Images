@@ -68,12 +68,12 @@ Put this into the head section of your page:
 </script>
 ```
 
-Add a rewrite to you .htaccess (Apache only), combined with some RewriteCond to make it fit your needs:
+Add a rewrite to your .htaccess, combined with some RewriteCond as it fits your needs:
 ```Htaccess
 RewriteRule \.(?:jpe?g|png|gif)$ responsive-images.php [QSA,L]
 ```
 
-Put ```responsive-images.php``` into place, as well as the plugin ```jquery.responsiveimages.min.js```.
+Put ```responsive-images.php``` in place, as well as the plugin ```jquery.responsiveimages.min.js```.
 
 Create a new directory where your images will be cached. Change the settings in responsive-images.php to match your setup and need.
 
