@@ -13,18 +13,18 @@
  * SITE_PATH: Document root file system path
  * SITE_URI: URI from document root
  */
-define('SITE_PATH', rtrim(dirname($_SERVER['SCRIPT_FILENAME']),"/"));
-define('SITE_URI', dirname($_SERVER['SCRIPT_NAME']));
+define('SITE_PATH', rtrim(dirname($_SERVER['SCRIPT_FILENAME']),'/'));
+define('SITE_URI', rtrim(dirname($_SERVER['SCRIPT_NAME']), '/'));
 /**
  * PATH_CACHE: directory where resized image versions are stored
  * file system path
  */
-define('PATH_CACHE', dirname(__FILE__) . '/site/assets/cache/images_cache');
+define('PATH_CACHE', dirname(__FILE__) . '/sample/images_cache');
 /**
  * PATH_PLACEHOLDER: placeholder image to be delivered before replacement
  * url
  */
-define('URL_PLACEHOLDER', SITE_URI . (strlen(SITE_URI) == 1?'':'/') . 'site/templates/assets/images/transparent.gif');
+define('URL_PLACEHOLDER', SITE_URI . '/sample/images/transparent.gif'); 
 /**
  * pixel interval to determine width of image to be served (width = ceil(imagewidth / interval) * inteval)
  * the smaller the number, the more versions of each image are likely to be generated and cached
@@ -114,7 +114,7 @@ function getPath($url) {
 	if(strpos($path, SITE_URI) === false) {
     $path = SITE_URI . $path;
 	}
-	$path = preg_replace('#' . preg_quote(SITE_URI) . '$#', '', SITE_PATH) . $path . '/' . basename($url);
+	$path = preg_replace('#' . preg_quote(SITE_URI) . '$#', '', SITE_PATH) . $path . '/' . basename($url); 
 	return $path;
 }
 
